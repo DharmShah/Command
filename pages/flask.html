@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Flask boilerplate with commands, folder structure, app.py, config.py, db.py, templates, requirements, and env setup."
+    />
+    <meta
+      name="keywords"
+      content="flask boilerplate, python flask setup, sqlalchemy flask, pydantic settings"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Flask Boilerplate" />
+    <meta
+      property="og:description"
+      content="Production-style Flask starter with DB and environment configuration."
+    />
+    <meta name="twitter:card" content="summary" />
+    <title>Flask Boilerplate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./copy-code.js" defer></script>
+  </head>
+  <body class="min-h-screen bg-slate-50 text-slate-900">
+    <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <a href="../index.html" class="text-sm font-semibold text-emerald-700"
+        >Back to Home</a
+      >
+      <h1 class="mt-3 text-3xl font-black">Flask Boilerplate</h1>
+      <p class="mt-2 text-sm text-slate-600">
+        Includes database setup, template rendering, and env-driven
+        configuration.
+      </p>
+
+      <section class="mt-6 grid gap-4 md:grid-cols-2">
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h2 class="text-lg font-semibold">Commands</h2>
+            <button
+              data-copy-target="flask-commands"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="flask-commands"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+mkdir flask_app
+cd flask_app
+python -m venv .venv
+. .venv/Scripts/activate
+pip install -r requirements.txt
+copy .env.example .env
+python app.py</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h2 class="text-lg font-semibold">Folder Structure</h2>
+            <button
+              data-copy-target="flask-structure"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="flask-structure"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+flask_app/
+  app.py
+  config.py
+  db.py
+  templates/
+    index.html
+  requirements.txt
+  .env.example</pre
+          >
+        </article>
+      </section>
+
+      <section class="mt-6 space-y-4">
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">app.py</h3>
+            <button
+              data-copy-target="flask-app-py"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="flask-app-py"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from flask import Flask, render_template
+from db import init_db, read_notes
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    notes = read_notes()
+    return render_template("index.html", notes=notes)
+
+if __name__ == "__main__":
+    init_db()
+    app.run(debug=True)</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">config.py</h3>
+            <button
+              data-copy-target="flask-config-py"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="flask-config-py"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    openai_api_key: str = ""
+    openrouter_api_key: str = ""
+    gemini_api_key: str = ""
+    database_url: str = "sqlite:///./app.db"
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+settings = Settings()</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">db.py</h3>
+            <button
+              data-copy-target="flask-db-py"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="flask-db-py"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from sqlalchemy import create_engine, text
+from config import settings
+
+engine = create_engine(settings.database_url, future=True)
+
+def init_db() -> None:
+    with engine.begin() as conn:
+        conn.execute(text("CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, title TEXT NOT NULL)"))
+        conn.execute(text("INSERT INTO notes (title) VALUES ('Hello from Flask boilerplate')"))
+
+def read_notes() -> list[dict]:
+    with engine.connect() as conn:
+        rows = conn.execute(text("SELECT id, title FROM notes ORDER BY id DESC LIMIT 5"))
+        return [{"id": row.id, "title": row.title} for row in rows]</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">templates/index.html</h3>
+            <button
+              data-copy-target="flask-template"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="flask-template"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Flask Demo&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Flask Demo with Database + HTML&lt;/h1&gt;
+    &lt;ul&gt;
+      {% for note in notes %}
+      &lt;li&gt;{{ note.id }} - {{ note.title }}&lt;/li&gt;
+      {% endfor %}
+    &lt;/ul&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre
+          >
+        </article>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <article class="rounded-xl bg-white p-4 shadow">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-semibold">requirements.txt</h3>
+              <button
+                data-copy-target="flask-req"
+                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+              ></button>
+            </div>
+            <pre
+              id="flask-req"
+              class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+            >
+flask
+python-dotenv
+pydantic
+pydantic-settings
+sqlalchemy</pre
+            >
+          </article>
+
+          <article class="rounded-xl bg-white p-4 shadow">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-semibold">.env.example</h3>
+              <button
+                data-copy-target="flask-env"
+                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+              ></button>
+            </div>
+            <pre
+              id="flask-env"
+              class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+            >
+OPENAI_API_KEY=your_openai_key
+OPENROUTER_API_KEY=your_openrouter_key
+GEMINI_API_KEY=your_gemini_key
+DATABASE_URL=sqlite:///./app.db</pre
+            >
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="LangChain boilerplate with API-key configuration, model provider setup, and ready-to-run commands."
+    />
+    <meta
+      name="keywords"
+      content="langchain boilerplate, openai api key, openrouter, gemini, python ai starter"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="LangChain Boilerplate" />
+    <meta
+      property="og:description"
+      content="LangChain starter with env-driven provider configuration and sample execution."
+    />
+    <meta name="twitter:card" content="summary" />
+    <title>LangChain Boilerplate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./copy-code.js" defer></script>
+  </head>
+  <body class="min-h-screen bg-slate-50 text-slate-900">
+    <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <a href="../index.html" class="text-sm font-semibold text-emerald-700"
+        >Back to Home</a
+      >
+      <h1 class="mt-3 text-3xl font-black">LangChain Boilerplate</h1>
+
+      <section class="mt-6 grid gap-4 md:grid-cols-2">
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h2 class="text-lg font-semibold">Commands</h2>
+            <button
+              data-copy-target="lc-cmd"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="lc-cmd"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+mkdir langchain_app
+cd langchain_app
+python -m venv .venv
+. .venv/Scripts/activate
+pip install -r requirements.txt
+copy .env.example .env
+python main.py</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h2 class="text-lg font-semibold">Folder Structure</h2>
+            <button
+              data-copy-target="lc-structure"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="lc-structure"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+langchain_app/
+  main.py
+  config.py
+  requirements.txt
+  .env.example</pre
+          >
+        </article>
+      </section>
+
+      <section class="mt-6 space-y-4">
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">main.py</h3>
+            <button
+              data-copy-target="lc-main"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="lc-main"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from config import settings
+
+def choose_model() -> str:
+    provider = settings.model_provider.lower()
+    if provider == "gemini":
+        return "gemini-1.5-flash"
+    if provider == "openrouter":
+        return "openrouter/auto"
+    return "gpt-4o-mini"
+
+if __name__ == "__main__":
+    print("LangChain boilerplate ready")
+    print("Provider:", settings.model_provider)
+    print("Model:", choose_model())</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">config.py</h3>
+            <button
+              data-copy-target="lc-config"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="lc-config"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    openai_api_key: str = ""
+    openrouter_api_key: str = ""
+    gemini_api_key: str = ""
+    model_provider: str = "openai"
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+settings = Settings()</pre
+          >
+        </article>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <article class="rounded-xl bg-white p-4 shadow">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-semibold">requirements.txt</h3>
+              <button
+                data-copy-target="lc-req"
+                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+              ></button>
+            </div>
+            <pre
+              id="lc-req"
+              class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+            >
+langchain
+langchain-openai
+langchain-google-genai
+python-dotenv
+pydantic
+pydantic-settings
+openai</pre
+            >
+          </article>
+
+          <article class="rounded-xl bg-white p-4 shadow">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-semibold">.env.example</h3>
+              <button
+                data-copy-target="lc-env"
+                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+              ></button>
+            </div>
+            <pre
+              id="lc-env"
+              class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+            >
+OPENAI_API_KEY=your_openai_key
+OPENROUTER_API_KEY=your_openrouter_key
+GEMINI_API_KEY=your_gemini_key
+MODEL_PROVIDER=openai</pre
+            >
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

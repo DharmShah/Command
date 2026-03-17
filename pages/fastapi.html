@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="FastAPI boilerplate with commands, project structure, config.py, db.py, requirements, and env example."
+    />
+    <meta
+      name="keywords"
+      content="fastapi boilerplate, uvicorn setup, pydantic settings, python api starter"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="FastAPI Boilerplate" />
+    <meta
+      property="og:description"
+      content="FastAPI starter with database wiring and environment-driven settings."
+    />
+    <meta name="twitter:card" content="summary" />
+    <title>FastAPI Boilerplate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./copy-code.js" defer></script>
+  </head>
+  <body class="min-h-screen bg-slate-50 text-slate-900">
+    <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <a href="../index.html" class="text-sm font-semibold text-emerald-700"
+        >Back to Home</a
+      >
+      <h1 class="mt-3 text-3xl font-black">FastAPI Boilerplate</h1>
+
+      <section class="mt-6 grid gap-4 md:grid-cols-2">
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h2 class="text-lg font-semibold">Commands</h2>
+            <button
+              data-copy-target="fa-commands"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="fa-commands"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+mkdir fastapi_app
+cd fastapi_app
+python -m venv .venv
+. .venv/Scripts/activate
+pip install -r requirements.txt
+copy .env.example .env
+uvicorn app.main:app --reload</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h2 class="text-lg font-semibold">Folder Structure</h2>
+            <button
+              data-copy-target="fa-structure"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="fa-structure"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+fastapi_app/
+  app/
+    main.py
+    config.py
+    db.py
+  requirements.txt
+  .env.example</pre
+          >
+        </article>
+      </section>
+
+      <section class="mt-6 space-y-4">
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">app/main.py</h3>
+            <button
+              data-copy-target="fa-main"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="fa-main"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from fastapi import FastAPI
+from .db import init_db, list_items
+
+app = FastAPI(title="FastAPI Boilerplate")
+
+@app.on_event("startup")
+def startup() -> None:
+    init_db()
+
+@app.get("/")
+def read_root() -> dict:
+    return {"message": "FastAPI boilerplate running", "items": list_items()}</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">app/config.py</h3>
+            <button
+              data-copy-target="fa-config"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="fa-config"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    openai_api_key: str = ""
+    openrouter_api_key: str = ""
+    gemini_api_key: str = ""
+    database_url: str = "sqlite:///./fastapi.db"
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+settings = Settings()</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">app/db.py</h3>
+            <button
+              data-copy-target="fa-db"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="fa-db"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from sqlalchemy import create_engine, text
+from .config import settings
+
+engine = create_engine(settings.database_url, future=True)
+
+def init_db() -> None:
+    with engine.begin() as conn:
+        conn.execute(text("CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY, name TEXT NOT NULL)"))
+        conn.execute(text("INSERT INTO items (name) VALUES ('FastAPI demo item')"))
+
+def list_items() -> list[dict]:
+    with engine.connect() as conn:
+        rows = conn.execute(text("SELECT id, name FROM items ORDER BY id DESC LIMIT 5"))
+        return [{"id": row.id, "name": row.name} for row in rows]</pre
+          >
+        </article>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <article class="rounded-xl bg-white p-4 shadow">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-semibold">requirements.txt</h3>
+              <button
+                data-copy-target="fa-req"
+                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+              ></button>
+            </div>
+            <pre
+              id="fa-req"
+              class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+            >
+fastapi
+uvicorn
+sqlalchemy
+python-dotenv
+pydantic
+pydantic-settings</pre
+            >
+          </article>
+
+          <article class="rounded-xl bg-white p-4 shadow">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-semibold">.env.example</h3>
+              <button
+                data-copy-target="fa-env"
+                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+              ></button>
+            </div>
+            <pre
+              id="fa-env"
+              class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+            >
+OPENAI_API_KEY=your_openai_key
+OPENROUTER_API_KEY=your_openrouter_key
+GEMINI_API_KEY=your_gemini_key
+DATABASE_URL=sqlite:///./fastapi.db</pre
+            >
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

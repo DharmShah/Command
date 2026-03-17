@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React Tailwind CDN Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <div id="root" class="mx-auto max-w-2xl p-8"></div>
+  <script type="text/babel">
+    function App() {
+      return (
+        <div className="rounded-2xl bg-slate-900 p-6 shadow-lg shadow-emerald-900/30">
+          <h1 className="text-2xl font-bold text-emerald-300">React + Tailwind CDN Boilerplate</h1>
+          <p className="mt-3 text-slate-300">This page runs without build tools for quick demos.</p>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>

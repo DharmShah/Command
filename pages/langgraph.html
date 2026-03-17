@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="LangGraph boilerplate with graph runner, typed state, requirements, and environment variable setup."
+    />
+    <meta
+      name="keywords"
+      content="langgraph boilerplate, agent graph, langchain graph starter"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="LangGraph Boilerplate" />
+    <meta
+      property="og:description"
+      content="Minimal LangGraph starter with runnable graph workflow and environment setup."
+    />
+    <meta name="twitter:card" content="summary" />
+    <title>LangGraph Boilerplate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./copy-code.js" defer></script>
+  </head>
+  <body class="min-h-screen bg-slate-50 text-slate-900">
+    <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <a href="../index.html" class="text-sm font-semibold text-emerald-700"
+        >Back to Home</a
+      >
+      <h1 class="mt-3 text-3xl font-black">LangGraph Boilerplate</h1>
+
+      <section class="mt-6 grid gap-4 md:grid-cols-2">
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h2 class="text-lg font-semibold">Commands</h2>
+            <button
+              data-copy-target="lg-cmd"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="lg-cmd"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+mkdir langgraph_app
+cd langgraph_app
+python -m venv .venv
+. .venv/Scripts/activate
+pip install -r requirements.txt
+copy .env.example .env
+python graph_runner.py</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h2 class="text-lg font-semibold">Folder Structure</h2>
+            <button
+              data-copy-target="lg-structure"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="lg-structure"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+langgraph_app/
+  graph_runner.py
+  state.py
+  requirements.txt
+  .env.example</pre
+          >
+        </article>
+      </section>
+
+      <section class="mt-6 space-y-4">
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">graph_runner.py</h3>
+            <button
+              data-copy-target="lg-runner"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="lg-runner"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from state import GraphState
+
+def run_graph(question: str) -> GraphState:
+    return {
+        "question": question,
+        "answer": "Demo response from LangGraph boilerplate"
+    }
+
+if __name__ == "__main__":
+    result = run_graph("What is LangGraph?")
+    print(result)</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">state.py</h3>
+            <button
+              data-copy-target="lg-state"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="lg-state"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from typing import TypedDict
+
+class GraphState(TypedDict):
+    question: str
+    answer: str</pre
+          >
+        </article>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <article class="rounded-xl bg-white p-4 shadow">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-semibold">requirements.txt</h3>
+              <button
+                data-copy-target="lg-req"
+                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+              ></button>
+            </div>
+            <pre
+              id="lg-req"
+              class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+            >
+langgraph
+langchain
+langchain-openai
+python-dotenv
+pydantic
+pydantic-settings</pre
+            >
+          </article>
+
+          <article class="rounded-xl bg-white p-4 shadow">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-semibold">.env.example</h3>
+              <button
+                data-copy-target="lg-env"
+                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+              ></button>
+            </div>
+            <pre
+              id="lg-env"
+              class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+            >
+OPENAI_API_KEY=your_openai_key
+OPENROUTER_API_KEY=your_openrouter_key
+GEMINI_API_KEY=your_gemini_key</pre
+            >
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
