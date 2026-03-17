@@ -29,6 +29,7 @@
         >Back to Home</a
       >
       <h1 class="mt-3 text-3xl font-black">Django + DRF</h1>
+
       <section class="mt-6 grid gap-4 md:grid-cols-2">
         <article class="rounded-xl bg-white p-4 shadow">
           <div class="mb-2 flex items-center justify-between">
@@ -46,12 +47,13 @@ mkdir django_api
 cd django_api
 python -m venv .venv
 . .venv/Scripts/activate
-pip install django djangorestframework python-dotenv pydantic pydantic-settings
-python -m django startproject core .
-python manage.py startapp api
+pip install -r requirements.txt
+copy .env.example .env
+python manage.py migrate
 python manage.py runserver</pre
           >
         </article>
+
         <article class="rounded-xl bg-white p-4 shadow">
           <div class="mb-2 flex items-center justify-between">
             <h2 class="text-lg font-semibold">Folder Structure</h2>
@@ -76,6 +78,113 @@ django_api/
   .env.example</pre
           >
         </article>
+      </section>
+
+      <section class="mt-6 space-y-4">
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">api/views.py</h3>
+            <button
+              data-copy-target="dj-views"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="dj-views"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(["GET"])
+def health(request):
+    return Response({"status": "ok", "service": "django-drf"})</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">api/urls.py</h3>
+            <button
+              data-copy-target="dj-api-urls"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="dj-api-urls"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from django.urls import path
+from .views import health
+
+urlpatterns = [
+    path("health/", health),
+]</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">core/urls.py</h3>
+            <button
+              data-copy-target="dj-core-urls"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="dj-core-urls"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("api/", include("api.urls")),
+]</pre
+          >
+        </article>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <article class="rounded-xl bg-white p-4 shadow">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-semibold">requirements.txt</h3>
+              <button
+                data-copy-target="dj-req"
+                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+              ></button>
+            </div>
+            <pre
+              id="dj-req"
+              class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+            >
+django
+djangorestframework
+python-dotenv
+pydantic
+pydantic-settings</pre
+            >
+          </article>
+
+          <article class="rounded-xl bg-white p-4 shadow">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-semibold">.env.example</h3>
+              <button
+                data-copy-target="dj-env"
+                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+              ></button>
+            </div>
+            <pre
+              id="dj-env"
+              class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+            >
+OPENAI_API_KEY=your_openai_key
+OPENROUTER_API_KEY=your_openrouter_key
+GEMINI_API_KEY=your_gemini_key
+DEBUG=True</pre
+            >
+          </article>
+        </div>
       </section>
     </main>
   </body>

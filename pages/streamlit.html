@@ -29,6 +29,7 @@
         >Back to Home</a
       >
       <h1 class="mt-3 text-3xl font-black">Streamlit</h1>
+
       <section class="mt-6 grid gap-4 md:grid-cols-2">
         <article class="rounded-xl bg-white p-4 shadow">
           <div class="mb-2 flex items-center justify-between">
@@ -46,10 +47,12 @@ mkdir streamlit_app
 cd streamlit_app
 python -m venv .venv
 . .venv/Scripts/activate
-pip install streamlit pydantic pydantic-settings python-dotenv
+pip install -r requirements.txt
+copy .env.example .env
 streamlit run app.py</pre
           >
         </article>
+
         <article class="rounded-xl bg-white p-4 shadow">
           <div class="mb-2 flex items-center justify-between">
             <h2 class="text-lg font-semibold">Folder Structure</h2>
@@ -69,6 +72,98 @@ streamlit_app/
   .env.example</pre
           >
         </article>
+      </section>
+
+      <section class="mt-6 space-y-4">
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">app.py</h3>
+            <button
+              data-copy-target="st-app"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="st-app"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+import streamlit as st
+from config import settings
+
+st.set_page_config(page_title="Streamlit Boilerplate", layout="centered")
+st.title("Streamlit Boilerplate")
+st.write("Provider:", settings.model_provider)
+
+if st.button("Run Demo"):
+    st.success("App is connected to env config successfully.")</pre
+          >
+        </article>
+
+        <article class="rounded-xl bg-white p-4 shadow">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="font-semibold">config.py</h3>
+            <button
+              data-copy-target="st-config"
+              class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+            ></button>
+          </div>
+          <pre
+            id="st-config"
+            class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+          >
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    openai_api_key: str = ""
+    openrouter_api_key: str = ""
+    gemini_api_key: str = ""
+    model_provider: str = "openai"
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+settings = Settings()</pre
+          >
+        </article>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <article class="rounded-xl bg-white p-4 shadow">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-semibold">requirements.txt</h3>
+              <button
+                data-copy-target="st-req"
+                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+              ></button>
+            </div>
+            <pre
+              id="st-req"
+              class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+            >
+streamlit
+python-dotenv
+pydantic
+pydantic-settings</pre
+            >
+          </article>
+
+          <article class="rounded-xl bg-white p-4 shadow">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="font-semibold">.env.example</h3>
+              <button
+                data-copy-target="st-env"
+                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-slate-100 px-2 py-1 text-slate-700"
+              ></button>
+            </div>
+            <pre
+              id="st-env"
+              class="overflow-x-auto rounded bg-slate-950 p-3 text-xs text-emerald-100"
+            >
+OPENAI_API_KEY=your_openai_key
+OPENROUTER_API_KEY=your_openrouter_key
+GEMINI_API_KEY=your_gemini_key
+MODEL_PROVIDER=openai</pre
+            >
+          </article>
+        </div>
       </section>
     </main>
   </body>

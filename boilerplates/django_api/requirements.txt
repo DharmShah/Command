@@ -1,0 +1,5 @@
+django
+djangorestframework
+python-dotenv
+pydantic
+pydantic-settings
